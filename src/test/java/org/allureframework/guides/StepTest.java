@@ -20,18 +20,21 @@ public class StepTest {
     @DisplayName("Hello")
     public void multiCase2Test() {
         testCase.create("110", (result) -> {
+            result.setName(" Hello 1 ");
             Allure.label("test", "first");
             Allure.step("Go to the next place");
             Allure.step("First step");
         });
 
         testCase.create("111", (result) -> {
+            result.setName(" Hello 2 ");
             Allure.label("test", "second");
             Allure.step("Go to the next place");
             Allure.step("Second step");
         });
 
         testCase.create("112", (result) -> {
+            result.setName(" Hello 3 ");
             Allure.label("test", "third");
             Allure.step("Go to the next place");
             Allure.step("Third step");

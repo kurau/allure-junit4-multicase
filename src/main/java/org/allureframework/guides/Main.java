@@ -12,6 +12,7 @@ import static io.qameta.allure.Allure.getLifecycle;
 
 public class Main {
 
+
     private static List<String> steps = new ArrayList<>();
     private static TestResult testResult = new TestResult();
 

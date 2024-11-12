@@ -30,15 +30,19 @@ public class AllureTestCaseRule extends TestWatcher {
     private TestResult parent;
 
     protected void starting(final Description description) {
-        Allure.getLifecycle().updateTestCase((update) -> this.parent = update);
+//        Allure.getLifecycle().updateTestCase((update) -> this.parent = update);
+        Allure.getLifecycle()
+                .updateTestCase((update) -> {
+                    this.parent = createTestResult(UUID.randomUUID().toString(), update).get();
+                    update.setStatus(Status.SKIPPED);
+                    update.setStatusDetails(new StatusDetails()
+                            .setMessage(IGNORE_TEST_RESULT_MESSAGE));
+                    update.setName("Container for: " + update.getName());
+                });
     }
 
     protected void finished(final Description description) {
-        Allure.getLifecycle().updateTestCase((update) -> {
-            update.setStatus(Status.SKIPPED);
-            update.setStatusDetails(new StatusDetails()
-                    .setMessage(IGNORE_TEST_RESULT_MESSAGE));
-        });
+        // parent закрывается где-то раньше, поэтому тут уже ничего не апдейтится
     }
 
     public void create(final String id,
@@ -50,7 +54,8 @@ public class AllureTestCaseRule extends TestWatcher {
             getLifecycle().updateTestCase(uuid, (result) -> {
                 result.getLabels().add(new Label().setName(ALLURE_ID_LABEL).setValue(id));
                 if (!children.isEmpty()) {
-                    result.setSteps(children.getLast().getSteps());
+                    result.setSteps(
+                            children.get(children.size()-1).getSteps());
                 }
             });
             try {
